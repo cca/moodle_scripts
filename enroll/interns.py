@@ -13,8 +13,8 @@ program_to_course_map: dict[str, str] = {
     "Architecture": "BARCH-INTRN",
     "Graduate Architecture": "MARCH-INTRN",
     "Graphic Design": "GRAPH-INTRN",
-    # "Industrial Design": "INDUS-INTRN",
-    # "Interaction Design": "IXDSN-INTRN",
+    "Industrial Design": "INDUS-INTRN",
+    "Interaction Design": "IXDSN-INTRN",
     "Interior Design": "INTER-INTRN",
 }
 programs_with_internship: list[str] = list(program_to_course_map.keys())
@@ -24,7 +24,7 @@ def row_to_dict(header, row) -> dict[Any, Any]:
     return dict(zip(header, row))
 
 
-def meets_program_criteria(student) -> bool:
+def meets_program_criteria(student: dict[str, Any], program: str | None = None) -> bool:
     """Check if student meets the criteria to be added to their major's
     internship course. Criteria rely on the Latest Class Standing field, which
     is a string that goes from "First Year" up to "Fifth Year". It is not a
@@ -41,20 +41,22 @@ def meets_program_criteria(student) -> bool:
     level: str = student["Latest Class Standing"]
     # INDUS wants students to finish Prof Practice, we do not preload them
     # IXDSN has their own "student tracking" spreadsheet we use
-    if (
-        major
-        in (
-            "Architecture",
-            "Interior Design",
-            "Graphic Design",
-            # "Interaction Design",
-        )
-        and level == "Third Year"
-    ):
+    # but if we're using program filter, always return students in that program
+    # even if it is not one of the ones we normally preload
+    programs = [
+        "Architecture",
+        "Interior Design",
+        "Graphic Design",
+    ]
+    if program:
+        programs.append(program)
+
+    if major in programs and level == "Third Year":
+        return True
+    if major == "Industrial Design" and level == "Fourth Year":
         return True
     if major == "Graduate Architecture" and level == "Second Year":
         return True
-    # default to false
     return False
 
 
@@ -79,7 +81,7 @@ def make_enrollments(student, semester, program=None, list_mode=False) -> list[A
     ):
         if program and major != program:
             return []
-        if not meets_program_criteria(student):
+        if not meets_program_criteria(student, program):
             return []
         # return enrollment rows
         username: str = re.sub("@cca.edu", "", student["CCA Email"])
@@ -167,12 +169,6 @@ def semester_validator(ctx, param, value):
     help="print list of students (instead of CSV)",
 )
 def main(report: Path, semester: str, program: str, list_mode: bool):
-    if program == "Industrial Design":
-        click.echo(
-            "We do not preload Industrial Design internships students. They provide us with a list of students who completed the Professional Practice course.",
-            err=True,
-        )
-        exit(1)
     wd_report_to_enroll_csv(report, semester, program, list_mode)
     if not list_mode:
         click.echo(

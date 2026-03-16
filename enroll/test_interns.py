@@ -99,7 +99,7 @@ def test_make_enrollment_program_filter(input, expected):
 
 
 @pytest.mark.parametrize(
-    "input,expected",
+    "student,program,expected",
     [
         # ARCHT first year, does not meet
         (
@@ -110,6 +110,7 @@ def test_make_enrollment_program_filter(input, expected):
                 "Is International Student": "",
                 "Latest Class Standing": "First Year",
             },
+            None,
             False,
         ),
         # ARCHT third year, meets
@@ -121,6 +122,7 @@ def test_make_enrollment_program_filter(input, expected):
                 "Is International Student": "",
                 "Latest Class Standing": "Third Year",
             },
+            None,
             True,
         ),
         # MARCH 2nd year, also meets
@@ -132,12 +134,37 @@ def test_make_enrollment_program_filter(input, expected):
                 "Is International Student": "Yes",
                 "Latest Class Standing": "Second Year",
             },
+            None,
             True,
+        ),
+        # Passing INTER to program filter
+        (
+            {
+                "CCA Email": "a@cca.edu",
+                "Primary Program of Study Record Status": "In Progress",
+                "Primary Program of Study": "Interior Design",
+                "Is International Student": "Yes",
+                "Latest Class Standing": "Third Year",
+            },
+            "Interior Design",
+            True,
+        ),
+        # Passing INTER to program filter but student is 2nd year
+        (
+            {
+                "CCA Email": "a@cca.edu",
+                "Primary Program of Study Record Status": "In Progress",
+                "Primary Program of Study": "Interior Design",
+                "Is International Student": "Yes",
+                "Latest Class Standing": "Second Year",
+            },
+            "Interior Design",
+            False,
         ),
     ],
 )
-def test_meets_program_criteria(input, expected):
-    assert meets_program_criteria(input) == expected
+def test_meets_program_criteria(student, program, expected):
+    assert meets_program_criteria(student, program) == expected
 
 
 # test list mode
