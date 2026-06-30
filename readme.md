@@ -26,6 +26,15 @@ cp example.env .env
 # Edit .env with your actual values
 ```
 
+## Linting & Formatting
+
+This project uses [ruff](https://docs.astral.sh/ruff/) for linting and formatting:
+
+```sh
+uv run ruff check          # lint all Python files
+uv run ruff format         # format all Python files
+```
+
 ## LICENSE
 
 [ECL Version 2.0](https://opensource.org/licenses/ECL-2.0)
