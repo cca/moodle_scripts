@@ -11,7 +11,7 @@ def test_normal_nso():
     result = runner.invoke(main, ["enroll/fixtures/nso.csv", "-c", "NSO-{type}-2024FA"])
     assert result.exit_code == 0
 
-    with open("nso.csv", "r") as f:
+    with open("nso.csv") as f:
         lines = f.readlines()
         # "notaccaemail@gmail.com" student is skipped
         assert lines == [

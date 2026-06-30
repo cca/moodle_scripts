@@ -2,8 +2,9 @@ import _csv  # for typing
 import csv
 import re
 import warnings
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator, Literal
+from typing import Any, Literal
 
 import click
 from openpyxl import Workbook, load_workbook
@@ -21,7 +22,7 @@ programs_with_internship: list[str] = list(program_to_course_map.keys())
 
 
 def row_to_dict(header, row) -> dict[Any, Any]:
-    return dict(zip(header, row))
+    return dict(zip(header, row, strict=True))
 
 
 def meets_program_criteria(student: dict[str, Any], program: str | None = None) -> bool:
@@ -55,9 +56,7 @@ def meets_program_criteria(student: dict[str, Any], program: str | None = None) 
         return True
     if major == "Industrial Design" and level == "Fourth Year":
         return True
-    if major == "Graduate Architecture" and level == "Second Year":
-        return True
-    return False
+    return major == "Graduate Architecture" and level == "Second Year"
 
 
 def make_enrollments(student, semester, program=None, list_mode=False) -> list[Any]:

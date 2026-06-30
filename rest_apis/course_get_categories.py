@@ -16,7 +16,7 @@ import config
 # https://moodle.cca.edu/webservice/rest/server.php?wstoken=...&wsfunction=core_course_get_categories&moodlewsrestformat=json&criteria[0][key]=name&criteria[0][value]=2019SP
 
 
-def get_mdl_categories(filter):
+def get_mdl_categories(filter: dict[str, str]):
     """obtain a list of JSON representations of Moodle course categories
 
     returns an array of category dicts (see their fields below)
@@ -47,11 +47,9 @@ def get_mdl_categories(filter):
 
     # construct criteria in PHP array query string format
     # because it wouldn't be Moodle without a weird, antiquated nuance
-    num_filters = 0
-    for key, value in filter.items():
-        params["criteria[{}][key]".format(num_filters)] = key
-        params["criteria[{}][value]".format(num_filters)] = value
-        num_filters += 1
+    for index, (key, value) in enumerate(filter.items()):
+        params[f"criteria[{index}][key]"] = key
+        params[f"criteria[{index}][value]"] = value
 
     response = requests.get(url, params=params)
     data = response.json()

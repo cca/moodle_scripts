@@ -31,7 +31,7 @@ def get_mdl_courses():
     if data and isinstance(data, list):
         for c in data:
             print(c["shortname"])
-        print("Found {} total courses".format(len(data)))
+        print(f"Found {len(data)} total courses")
         return data
     """
     Moodle sends an HTTP 200 response back on errors with details in the JSON.
@@ -51,7 +51,7 @@ def get_mdl_courses():
     { exception: "webservice_access_exception", errorcode: "accessexception",
     message: "Access control exception" }
     """
-    return "Error: {}".format(data)
+    return f"Error: {data}"
 
 
 @click.command(help="Get the complete list of courses in Moodle.")

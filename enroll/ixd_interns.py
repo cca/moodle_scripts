@@ -55,7 +55,7 @@ def semester_validator(ctx, param, value):
 )
 def main(infile, semester, outfile):
     """Generate IXD intern enrollment CSV."""
-    with open(infile, "r") as fh:
+    with open(infile) as fh:
         reader = csv.DictReader(fh)
         with open(outfile, "w") as out:
             writer = csv.writer(out)

@@ -26,7 +26,7 @@ def writerows(writer, row, field_map) -> None:
         return
 
     stype = row[field_map["type"]].strip().title()
-    if stype not in student_type_map.keys():
+    if stype not in student_type_map:
         raise ValueError(f"Unknown student type {stype} for student {username}")
 
     writer.writerow(
@@ -92,7 +92,7 @@ def main(**kwargs):
         "course": kwargs["course"],
         "type": kwargs["type"],
     }
-    with open(kwargs["input.csv"], "r") as csvfile:
+    with open(kwargs["input.csv"]) as csvfile:
         reader = csv.DictReader(csvfile)
         with open(kwargs["outfile"], "w") as outfile:
             writer = csv.DictWriter(outfile, fieldnames=["username", "course1", "group1"])
