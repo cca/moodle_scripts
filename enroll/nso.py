@@ -22,9 +22,7 @@ student_type_map: dict[str, str] = {
 def writerows(writer, row, field_map) -> None:
     # sometimes user hasn't created their CCA email yet, if so skip them
     email = row[field_map["email"]].strip()
-    if not re.search(email_regex, email) or not (
-        username := re.sub(email_regex, "", email)
-    ):
+    if not re.search(email_regex, email) or not (username := re.sub(email_regex, "", email)):
         return
 
     stype = row[field_map["type"]].strip().title()
@@ -97,9 +95,7 @@ def main(**kwargs):
     with open(kwargs["input.csv"], "r") as csvfile:
         reader = csv.DictReader(csvfile)
         with open(kwargs["outfile"], "w") as outfile:
-            writer = csv.DictWriter(
-                outfile, fieldnames=["username", "course1", "group1"]
-            )
+            writer = csv.DictWriter(outfile, fieldnames=["username", "course1", "group1"])
             writer.writeheader()
             for row in reader:
                 writerows(writer, row, field_map)

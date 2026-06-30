@@ -21,10 +21,7 @@ from requests import HTTPError, Response, get
 # Find project root (where .env file is) by looking for pyproject.toml
 current_dir: Path = Path(__file__).resolve().parent
 project_root: Path = current_dir.parent
-while (
-    not (project_root / "pyproject.toml").exists()
-    and project_root != project_root.parent
-):
+while not (project_root / "pyproject.toml").exists() and project_root != project_root.parent:
     project_root = project_root.parent
 
 conf: dict[str, Any] = {
@@ -142,9 +139,7 @@ def write_csv(feedbacks: list[dict], label: str, output_dir: Path) -> None:
                         row.append(unescape(response["rawval"]))
                 writer.writerow(row)
 
-    debug(
-        f"Wrote {sum([len(f['anonattempts']) for f in feedbacks])} responses to {filename}"
-    )
+    debug(f"Wrote {sum([len(f['anonattempts']) for f in feedbacks])} responses to {filename}")
 
 
 def course_ids(courses) -> list[str]:
@@ -157,9 +152,7 @@ def course_ids(courses) -> list[str]:
         list[str]: list of course ids as strings
     """
     ids: list[str] = [
-        str(c["id"])
-        for c in courses
-        if str(c["id"]) not in conf["IGNORED_COURSES"].split(",")
+        str(c["id"]) for c in courses if str(c["id"]) not in conf["IGNORED_COURSES"].split(",")
     ]
     return ids
 

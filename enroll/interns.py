@@ -98,9 +98,7 @@ def make_enrollments(student, semester, program=None, list_mode=False) -> list[A
     return []
 
 
-def wd_report_to_enroll_csv(
-    report: Path, semester: str, program: str, list_mode: bool
-) -> None:
+def wd_report_to_enroll_csv(report: Path, semester: str, program: str, list_mode: bool) -> None:
     # silence "Workbook contains no default style" warning
     with warnings.catch_warnings(record=True):
         warnings.simplefilter("always")
@@ -119,9 +117,7 @@ def wd_report_to_enroll_csv(
             click.echo("\t".join(["Student", "Email"]))
         for row in rows:
             student: dict[str, str] = row_to_dict(header, row)
-            enrollments: list[Any] = make_enrollments(
-                student, semester, program, list_mode
-            )
+            enrollments: list[Any] = make_enrollments(student, semester, program, list_mode)
             if list_mode and len(enrollments):
                 click.echo("\t".join(enrollments))
             else:
@@ -137,9 +133,7 @@ def semester_validator(ctx, param, value):
     )
 
 
-@click.command(
-    help="Generate enrollments for students who are ready for internship courses."
-)
+@click.command(help="Generate enrollments for students who are ready for internship courses.")
 @click.help_option("-h", "--help")
 @click.option(
     "-r",
@@ -174,9 +168,7 @@ def main(report: Path, semester: str, program: str, list_mode: bool):
         click.echo(
             "Created enrollments.csv. Upload Users: https://moodle.cca.edu/admin/tool/uploaduser/"
         )
-        click.echo(
-            f"Remember to add {semester} to the Semester Groups grouping in each course."
-        )
+        click.echo(f"Remember to add {semester} to the Semester Groups grouping in each course.")
 
 
 if __name__ == "__main__":

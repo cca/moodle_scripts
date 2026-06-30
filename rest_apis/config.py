@@ -8,10 +8,7 @@ from dotenv import dotenv_values
 # Find project root (where .env file is) by looking for pyproject.toml
 current_dir = Path(__file__).resolve().parent
 project_root = current_dir.parent
-while (
-    not (project_root / "pyproject.toml").exists()
-    and project_root != project_root.parent
-):
+while not (project_root / "pyproject.toml").exists() and project_root != project_root.parent:
     project_root = project_root.parent
 
 conf = {
@@ -21,6 +18,4 @@ conf = {
 
 # backwards compatibility: expose token and url as module-level variables
 token = conf.get("TOKEN", "")
-url = (
-    conf.get("DOMAIN", "") + "/webservice/rest/server.php" if conf.get("DOMAIN") else ""
-)
+url = conf.get("DOMAIN", "") + "/webservice/rest/server.php" if conf.get("DOMAIN") else ""
